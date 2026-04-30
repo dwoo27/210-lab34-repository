@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <stack>
+#include <algorithm>
 #include <string>
 using namespace std;
 
@@ -192,72 +193,68 @@ public:
 		}
 	}
 
-	// Uses Prim's Algorithm to find the Minimum Spanning Tree
-	void minimumSpanningTree() {
-		// key[i] stores the cheapest edge weight needed to connect node i
-		vector<int> key(SIZE, INF);
-
-		// parent[i] stores which node connects node i to the MST
-		vector<int> parent(SIZE, -1);
-
-		// inMST[i] tells us whether node i has already been added to the MST
-		vector<bool> inMST(SIZE, false);
-
-		// Start at node 0
-		key[0] = 0;
-
-		// Repeat once for each node in the graph
-		for (int count = 0; count < SIZE - 1; count++) {
-			int currentNode = -1;
-			int smallestKey = INF;
-
-			// Find the unvisited node with the smallest key value
-			for (int i = 0; i < SIZE; i++) {
-				if (!inMST[i] && key[i] < smallestKey) {
-					smallestKey = key[i];
-					currentNode = i;
-				}
-			}
-
-			// If no valid node was found, stop
-			if (currentNode == -1) {
-				break;
-			}
-
-			// Add the selected node to the MST
-			inMST[currentNode] = true;
-
-			// Check every neighbor of the selected node
-			for (Pair neighbor : adjList[currentNode]) {
-				int nextNode = neighbor.first;
-				int weight = neighbor.second;
-
-				// If the neighbor is not already in the MST
-				// and this edge is cheaper than the current known edge,
-				// update its key and parent
-				if (!inMST[nextNode] && weight < key[nextNode]) {
-					key[nextNode] = weight;
-					parent[nextNode] = currentNode;
-				}
-			}
+	// Finds the main parent of a node
+// This helps determine which group a node belongs to
+	int findParent(vector<int>& parent, int node) {
+		if (parent[node] == node) {
+			return node;
 		}
 
-		cout << "\nMinimum Spanning Tree edges:\n";
-		cout << "============================\n";
+		return findParent(parent, parent[node]);
+	}
 
+	// Combines two groups into one group
+	void unionSets(vector<int>& parent, int firstNode, int secondNode) {
+		int firstParent = findParent(parent, firstNode);
+		int secondParent = findParent(parent, secondNode);
+
+		parent[secondParent] = firstParent;
+	}
+
+	// Uses Kruskal's Algorithm to find the Minimum Spanning Tree
+	void minimumSpanningTree(vector<Edge> edges) {
+		// Sort all edges from smallest weight to largest weight
+		sort(edges.begin(), edges.end(), [](Edge a, Edge b) {
+			return a.weight < b.weight;
+			});
+
+		// parent[i] starts as itself, meaning each node begins in its own group
+		vector<int> parent(SIZE);
+
+		for (int i = 0; i < SIZE; i++) {
+			parent[i] = i;
+		}
+
+		cout << "\nMinimum Spanning Tree edges using Kruskal's Algorithm:\n";
+		cout << "=====================================================\n";
+
+		int edgeCount = 0;
 		int totalWeight = 0;
 
-		// Print the MST edges
-		// Start at 1 because node 0 is the starting node and has no parent
-		for (int i = 1; i < SIZE; i++) {
-			if (parent[i] != -1) {
-				cout << "Edge from Stop " << parent[i]
-					<< " (" << stopNames[parent[i]] << ")"
-					<< " to Stop " << i
-					<< " (" << stopNames[i] << ")"
-					<< " with travel time: " << key[i] << " minutes\n";
+		// Go through each edge from cheapest to most expensive
+		for (Edge edge : edges) {
+			int srcParent = findParent(parent, edge.src);
+			int destParent = findParent(parent, edge.dest);
 
-				totalWeight += key[i];
+			// If the source and destination are in different groups,
+			// adding this edge will not create a cycle
+			if (srcParent != destParent) {
+				cout << "Edge from Stop " << edge.src
+					<< " (" << stopNames[edge.src] << ")"
+					<< " to Stop " << edge.dest
+					<< " (" << stopNames[edge.dest] << ")"
+					<< " with travel time: " << edge.weight << " minutes\n";
+
+				totalWeight += edge.weight;
+				edgeCount++;
+
+				// Combine the two groups
+				unionSets(parent, srcParent, destParent);
+			}
+
+			// A spanning tree for SIZE nodes only needs SIZE - 1 edges
+			if (edgeCount == SIZE - 1) {
+				break;
 			}
 		}
 
@@ -336,7 +333,7 @@ int main() {
 	campusNetwork.DFS(0);
 	campusNetwork.BFS(0);
 	campusNetwork.shortestPath(0);
-
+	campusNetwork.minimumSpanningTree(edges);
 	return 0;
 }
 
