@@ -14,11 +14,14 @@ struct Edge {
 typedef pair<int, int> Pair; // Creates alias 'Pair' for the pair<int,int> data type
 
 class Graph {
+	// Stores the real-world names of each campus shuttle stop
+	vector<string> stopNames; 
+
 public:
 	// a vector of vectors of Pairs to represent an adjacency list
 	vector<vector<Pair>> adjList;
 	// Graph Constructor
-	Graph(vector<Edge> const& edges) {
+	Graph(vector<Edge> const& edges, vector<string> const& names) {
 		// resize the vector to hold SIZE elements of type vector<Edge>
 		adjList.resize(SIZE);
 		// add edges to the directed graph
@@ -45,7 +48,10 @@ public:
 		visited[start] = true;
 		q.push(start);
 
-		cout << endl << "BFS starting from vertex " << start << ":" << endl;
+		cout << "\nShuttle Service Area Check (BFS) from Stop "
+			<< start << " (" << stopNames[start] << "):\n";
+		cout << "Purpose: Checking stops by distance from the starting shuttle stop\n";
+		cout << "=================================================================\n";
 
 		// Continue until there are no more nodes to visit
 		while (!q.empty()) {
@@ -53,16 +59,22 @@ public:
 			int current = q.front();
 			q.pop();
 
-			cout << current << " ";
+			cout << "Checking Stop " << current
+				<< " (" << stopNames[current] << ")\n";
 
 			// Visit each neighbor of the current node
 			for (Pair neighbor : adjList[current]) {
 				int next = neighbor.first;
+				int weight = neighbor.second;
 
 				// If the neighbor has not been visited, mark it and enqueue it
 				if (!visited[next]) {
 					visited[next] = true;
 					q.push(next);
+
+					cout << "  -> Next reachable stop: Stop " << next
+						<< " (" << stopNames[next] << ")"
+						<< " - Travel time: " << weight << " minutes\n";
 				}
 			}
 		}
@@ -83,7 +95,10 @@ public:
 		visited[start] = true;
 		s.push(start);
 
-		cout << "\nDFS starting from vertex " << start << ":\n";
+		cout << "\nEmergency Shuttle Route Trace (DFS) from Stop "
+			<< start << " (" << stopNames[start] << "):\n";
+		cout << "Purpose: Planning a deep route through connected campus stops\n";
+		cout << "=============================================================\n";
 
 		// Continue until there are no more nodes in the stack
 		while (!s.empty()) {
@@ -91,16 +106,23 @@ public:
 			int current = s.top();
 			s.pop();
 
-			cout << current << " ";
+			cout << "Inspecting Stop " << current
+				<< " (" << stopNames[current] << ")\n";
 
 			// Visit each neighbor of the current node
 			for (Pair neighbor : adjList[current]) {
 				int next = neighbor.first;
+				int weight = neighbor.second;
+
 
 				// If the neighbor has not been visited, mark it and push it
 				if (!visited[next]) {
 					visited[next] = true;
 					s.push(next);
+
+					cout << "  -> Possible route to Stop " << next
+						<< " (" << stopNames[next] << ")"
+						<< " - Travel time: " << weight << " minutes\n";
 				}
 			}
 		}
@@ -114,6 +136,26 @@ public:
 			cout << i << " --> ";
 			for (Pair v : adjList[i])
 				cout << "(" << v.first << ", " << v.second << ") ";
+			cout << endl;
+		}
+	}
+
+	// Displays the full shuttle network with each stop and its connections
+	void displayNetwork() {
+		cout << "\nSmart Campus Shuttle Network:\n";
+		cout << "=============================\n";
+
+		// Loop through every stop in the graph
+		for (int i = 0; i < adjList.size(); i++) {
+			cout << "Stop " << i << " (" << stopNames[i] << ") connects to:\n";
+
+			// Print all neighboring stops connected to this stop
+			for (Pair neighbor : adjList[i]) {
+				cout << "  -> Stop " << neighbor.first
+					<< " (" << stopNames[neighbor.first] << ")"
+					<< " - Travel time: " << neighbor.second << " minutes\n";
+			}
+
 			cout << endl;
 		}
 	}
@@ -136,8 +178,6 @@ int main() {
 		{6, 7, 3},
 		{6, 8, 7},
 	};
-	// Creates graph
-	Graph graph(edges);
 
 	// Names for each campus shuttle stop
 	vector<string> stopNames = {
@@ -150,13 +190,13 @@ int main() {
 		"Dorm B",
 		"Parking Garage",
 		"Cafeteria"
+
+
 	};
 
-	// Prints adjacency list representation of graph
-	graph.printGraph();
-
-	graph.DFS(0);
-	graph.BFS(0);
+	// Create the campus shuttle network graph
+	Graph campusNetwork(edges, stopNames);
+	campusNetwork.displayNetwork();
 
 	return 0;
 }
