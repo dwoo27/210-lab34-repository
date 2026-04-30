@@ -22,6 +22,8 @@ public:
 	vector<vector<Pair>> adjList;
 	// Graph Constructor
 	Graph(vector<Edge> const& edges, vector<string> const& names) {
+		// Copy the stop names into the class member variable
+		stopNames = names;
 		// resize the vector to hold SIZE elements of type vector<Edge>
 		adjList.resize(SIZE);
 		// add edges to the directed graph
@@ -197,6 +199,8 @@ int main() {
 	// Create the campus shuttle network graph
 	Graph campusNetwork(edges, stopNames);
 	campusNetwork.displayNetwork();
+	campusNetwork.DFS(0);
+	campusNetwork.BFS(0);
 
 	return 0;
 }
