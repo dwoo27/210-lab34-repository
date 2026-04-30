@@ -293,6 +293,9 @@ public:
 		}
 	}
 };
+
+void displayMenu();
+
 int main() {
 	// Creates a vector of graph edges/weights
 	vector<Edge> edges = {
@@ -329,11 +332,63 @@ int main() {
 
 	// Create the campus shuttle network graph
 	Graph campusNetwork(edges, stopNames);
-	campusNetwork.displayNetwork();
-	campusNetwork.DFS(0);
-	campusNetwork.BFS(0);
-	campusNetwork.shortestPath(0);
-	campusNetwork.minimumSpanningTree(edges);
+	
+	
+	int choice;
+
+	// Keep displaying the menu until the user enters 0
+	do {
+		displayMenu();
+		cin >> choice;
+
+		switch (choice) {
+		case 1:
+			// Display the full campus shuttle network
+			campusNetwork.displayNetwork();
+			break;
+
+		case 2:
+			// Run BFS from Stop 0
+			campusNetwork.BFS(0);
+			break;
+
+		case 3:
+			// Run DFS from Stop 0
+			campusNetwork.DFS(0);
+			break;
+
+		case 4:
+			// Calculate shortest paths from Stop 0
+			campusNetwork.shortestPath(0);
+			break;
+
+		case 5:
+			// Find the Minimum Spanning Tree using Kruskal's Algorithm
+			campusNetwork.minimumSpanningTree(edges);
+			break;
+
+		case 0:
+			// Exit the program
+			cout << "\nExiting Smart Campus Shuttle Network Program.\n";
+			break;
+
+		default:
+			// Handle invalid input
+			cout << "\nInvalid choice. Please enter a number from 0 to 5.\n";
+		}
+
+	} while (choice != 0);
 	return 0;
 }
 
+// Displays the menu options for the user
+void displayMenu() {
+	cout << "\nSmart Campus Shuttle Network Menu:\n";
+	cout << "[1] Display shuttle network\n";
+	cout << "[2] Check service areas by distance (BFS)\n";
+	cout << "[3] Plan inspection route (DFS)\n";
+	cout << "[4] Calculate shortest paths\n";
+	cout << "[5] Find Minimum Spanning Tree using Kruskal's Algorithm\n";
+	cout << "[0] Exit\n";
+	cout << "Enter your choice: ";
+}
