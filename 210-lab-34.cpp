@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <stack>
+#include <string>
 using namespace std;
 
 const int SIZE = 9;
@@ -137,6 +138,20 @@ int main() {
 	};
 	// Creates graph
 	Graph graph(edges);
+
+	// Names for each campus shuttle stop
+	vector<string> stopNames = {
+		"Main Gate",
+		"Library",
+		"Science Hall",
+		"Student Center",
+		"Gym",
+		"Dorm A",
+		"Dorm B",
+		"Parking Garage",
+		"Cafeteria"
+	};
+
 	// Prints adjacency list representation of graph
 	graph.printGraph();
 
