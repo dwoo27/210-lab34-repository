@@ -6,6 +6,7 @@
 using namespace std;
 
 const int SIZE = 9;
+const int INF = 999999;
 
 struct Edge {
 	int src, dest, weight;
@@ -130,6 +131,10 @@ public:
 		}
 
 		cout << endl;
+	}
+
+	void shortestPath(int start) {
+
 	}
 	// Print the graph's adjacency list
 	void printGraph() {
