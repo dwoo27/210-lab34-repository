@@ -191,6 +191,80 @@ public:
 			cout << endl;
 		}
 	}
+
+	// Uses Prim's Algorithm to find the Minimum Spanning Tree
+	void minimumSpanningTree() {
+		// key[i] stores the cheapest edge weight needed to connect node i
+		vector<int> key(SIZE, INF);
+
+		// parent[i] stores which node connects node i to the MST
+		vector<int> parent(SIZE, -1);
+
+		// inMST[i] tells us whether node i has already been added to the MST
+		vector<bool> inMST(SIZE, false);
+
+		// Start at node 0
+		key[0] = 0;
+
+		// Repeat once for each node in the graph
+		for (int count = 0; count < SIZE - 1; count++) {
+			int currentNode = -1;
+			int smallestKey = INF;
+
+			// Find the unvisited node with the smallest key value
+			for (int i = 0; i < SIZE; i++) {
+				if (!inMST[i] && key[i] < smallestKey) {
+					smallestKey = key[i];
+					currentNode = i;
+				}
+			}
+
+			// If no valid node was found, stop
+			if (currentNode == -1) {
+				break;
+			}
+
+			// Add the selected node to the MST
+			inMST[currentNode] = true;
+
+			// Check every neighbor of the selected node
+			for (Pair neighbor : adjList[currentNode]) {
+				int nextNode = neighbor.first;
+				int weight = neighbor.second;
+
+				// If the neighbor is not already in the MST
+				// and this edge is cheaper than the current known edge,
+				// update its key and parent
+				if (!inMST[nextNode] && weight < key[nextNode]) {
+					key[nextNode] = weight;
+					parent[nextNode] = currentNode;
+				}
+			}
+		}
+
+		cout << "\nMinimum Spanning Tree edges:\n";
+		cout << "============================\n";
+
+		int totalWeight = 0;
+
+		// Print the MST edges
+		// Start at 1 because node 0 is the starting node and has no parent
+		for (int i = 1; i < SIZE; i++) {
+			if (parent[i] != -1) {
+				cout << "Edge from Stop " << parent[i]
+					<< " (" << stopNames[parent[i]] << ")"
+					<< " to Stop " << i
+					<< " (" << stopNames[i] << ")"
+					<< " with travel time: " << key[i] << " minutes\n";
+
+				totalWeight += key[i];
+			}
+		}
+
+		cout << "\nTotal minimum travel time to connect all stops: "
+			<< totalWeight << " minutes\n";
+	}
+
 	// Print the graph's adjacency list
 	void printGraph() {
 		cout << "Graph's adjacency list:" << endl;
