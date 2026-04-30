@@ -1,20 +1,135 @@
-// 210-lab-34.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <vector>
+#include <queue>
+#include <stack>
+using namespace std;
 
-int main()
-{
-    std::cout << "Hello World!\n";
+const int SIZE = 7;
+
+struct Edge {
+	int src, dest, weight;
+};
+
+typedef pair<int, int> Pair; // Creates alias 'Pair' for the pair<int,int> data type
+
+class Graph {
+public:
+	// a vector of vectors of Pairs to represent an adjacency list
+	vector<vector<Pair>> adjList;
+	// Graph Constructor
+	Graph(vector<Edge> const& edges) {
+		// resize the vector to hold SIZE elements of type vector<Edge>
+		adjList.resize(SIZE);
+		// add edges to the directed graph
+		for (auto& edge : edges) {
+			int src = edge.src;
+			int dest = edge.dest;
+			int weight = edge.weight;
+			// insert at the end
+			adjList[src].push_back(make_pair(dest, weight));
+			// for an undirected graph, add an edge from dest to src also
+			adjList[dest].push_back(make_pair(src, weight));
+		}
+	}
+	// Breadth-First Search traversal
+    // BFS explores the graph level by level from the starting node
+	void BFS(int start) {
+		// Keeps track of whether each node has already been visited
+		vector<bool> visited(SIZE, false);
+
+		// Queue is used for BFS because it follows First In, First Out order
+		queue<int> q;
+
+		// Mark the starting node as visited and add it to the queue
+		visited[start] = true;
+		q.push(start);
+
+		cout << endl << "BFS starting from vertex " << start << ":" << endl;
+
+		// Continue until there are no more nodes to visit
+		while (!q.empty()) {
+			// Get the next node from the front of the queue
+			int current = q.front();
+			q.pop();
+
+			cout << current << " ";
+
+			// Visit each neighbor of the current node
+			for (Pair neighbor : adjList[current]) {
+				int next = neighbor.first;
+
+				// If the neighbor has not been visited, mark it and enqueue it
+				if (!visited[next]) {
+					visited[next] = true;
+					q.push(next);
+				}
+			}
+		}
+
+		cout << endl;
+	}
+
+	// Depth-First Search traversal
+    // DFS explores as far as possible down one path before backtracking
+	void DFS(int start) {
+		// Keeps track of whether each node has already been visited
+		vector<bool> visited(SIZE, false);
+
+		// Stack is used for DFS because it follows Last In, First Out order
+		stack<int> s;
+
+		// Mark the starting node as visited and push it onto the stack
+		visited[start] = true;
+		s.push(start);
+
+		cout << "\nDFS starting from vertex " << start << ":\n";
+
+		// Continue until there are no more nodes in the stack
+		while (!s.empty()) {
+			// Get the node from the top of the stack
+			int current = s.top();
+			s.pop();
+
+			cout << current << " ";
+
+			// Visit each neighbor of the current node
+			for (Pair neighbor : adjList[current]) {
+				int next = neighbor.first;
+
+				// If the neighbor has not been visited, mark it and push it
+				if (!visited[next]) {
+					visited[next] = true;
+					s.push(next);
+				}
+			}
+		}
+
+		cout << endl;
+	}
+	// Print the graph's adjacency list
+	void printGraph() {
+		cout << "Graph's adjacency list:" << endl;
+		for (int i = 0; i < adjList.size(); i++) {
+			cout << i << " --> ";
+			for (Pair v : adjList[i])
+				cout << "(" << v.first << ", " << v.second << ") ";
+			cout << endl;
+		}
+	}
+};
+int main() {
+	// Creates a vector of graph edges/weights
+	vector<Edge> edges = {
+		// (x, y, w) —> edge from x to y having weight w
+		{0,1,12},{0,2,8},{0,3,21},{2,3,6},{2,6,2},{5,6,6},{4,5,9},{2,4,4},{2,5,5}
+	};
+	// Creates graph
+	Graph graph(edges);
+	// Prints adjacency list representation of graph
+	graph.printGraph();
+
+	graph.DFS(0);
+	graph.BFS(0);
+
+	return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

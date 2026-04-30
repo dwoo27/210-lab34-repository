@@ -1,0 +1,45 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\dylan\\source\\repos\\210-lab-34\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{24FC1102-4B9B-48E7-8D16-545568346B2D}|210-lab-34.vcxproj|C:\\Users\\dylan\\source\\repos\\210-lab-34\\210-lab-34.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{24FC1102-4B9B-48E7-8D16-545568346B2D}|210-lab-34.vcxproj|solutionrelative:210-lab-34.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "210-lab-34.cpp",
+              "DocumentMoniker": "C:\\Users\\dylan\\source\\repos\\210-lab-34\\210-lab-34.cpp",
+              "RelativeDocumentMoniker": "210-lab-34.cpp",
+              "ToolTip": "C:\\Users\\dylan\\source\\repos\\210-lab-34\\210-lab-34.cpp*",
+              "RelativeToolTip": "210-lab-34.cpp*",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAgwIQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-04-30T01:53:30.667Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
