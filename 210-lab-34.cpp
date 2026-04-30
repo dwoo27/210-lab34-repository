@@ -133,8 +133,63 @@ public:
 		cout << endl;
 	}
 
+	// Calculates shortest paths from a starting node using a simple Dijkstra method
 	void shortestPath(int start) {
+		vector<int> distance(SIZE, INF);
+		vector<bool> visited(SIZE, false);
 
+		distance[start] = 0;
+
+		// Repeat once for each node in the graph
+		for (int count = 0; count < SIZE - 1; count++) {
+			int currentNode = -1;
+			int smallestDistance = INF;
+
+			// Find the unvisited node with the smallest distance
+			for (int i = 0; i < SIZE; i++) {
+				if (!visited[i] && distance[i] < smallestDistance) {
+					smallestDistance = distance[i];
+					currentNode = i;
+				}
+			}
+
+			// If no reachable unvisited node was found, stop
+			if (currentNode == -1) {
+				break;
+			}
+
+			// Mark this node as visited
+			visited[currentNode] = true;
+
+			// Update distances for all neighbors of the current node
+			for (Pair neighbor : adjList[currentNode]) {
+				int nextNode = neighbor.first;
+				int weight = neighbor.second;
+
+				if (!visited[nextNode] &&
+					distance[currentNode] + weight < distance[nextNode]) {
+					distance[nextNode] = distance[currentNode] + weight;
+				}
+			}
+		}
+
+		cout << "\nShortest travel times from Stop "
+			<< start << " (" << stopNames[start] << "):\n";
+		cout << "================================================\n";
+
+		for (int i = 0; i < SIZE; i++) {
+			cout << start << " -> " << i
+				<< " (" << stopNames[i] << ") : ";
+
+			if (distance[i] == INF) {
+				cout << "No route";
+			}
+			else {
+				cout << distance[i] << " minutes";
+			}
+
+			cout << endl;
+		}
 	}
 	// Print the graph's adjacency list
 	void printGraph() {
@@ -206,6 +261,8 @@ int main() {
 	campusNetwork.displayNetwork();
 	campusNetwork.DFS(0);
 	campusNetwork.BFS(0);
+	campusNetwork.shortestPath(0);
 
 	return 0;
 }
+
